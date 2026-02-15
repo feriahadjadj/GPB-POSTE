@@ -955,6 +955,54 @@ if (mychartSuperEl && typeof Chart !== 'undefined') {
 
 <script>
 $(function () {
+    var el = document.getElementById("doughnut-chart-super");
+    if (!el || typeof Chart === "undefined") return;
+
+    // destroy old chart instance if exists
+    if (el._chartInstance) {
+        el._chartInstance.destroy();
+    }
+
+    var dataValues = {!! json_encode(array_values($etats)) !!}.map(Number);
+
+    var chart = new Chart(el.getContext("2d"), {
+        type: "doughnut",
+        data: {
+            labels: ["Études", "Procédures", "Réalisation", "Non-Lancés", "Achevés"],
+            datasets: [{
+                data: dataValues,
+                backgroundColor: ['#A8D5BA', '#FFE1A8', '#A8CFE2', '#F4B6C2', '#D3C4F3'],
+                borderColor: "#ffffff",
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutoutPercentage: 65,
+            legend: { position: "bottom" },
+            title: {
+                display: true,
+                text: "Projets par phase d'avancement"
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index] || "";
+                        var value = data.datasets[0].data[tooltipItem.index] || 0;
+                        return label + ": " + value;
+                    }
+                }
+            }
+        }
+    });
+
+    el._chartInstance = chart;
+});
+</script>
+
+<script>
+$(function () {
 
     var el = document.getElementById("amounts-doughnut");
     if (!el || typeof Chart === "undefined") return;
@@ -1026,7 +1074,6 @@ $(function () {
     el._chartInstance = chart;
 });
 </script>
-
 
 
 @endsection
