@@ -5,6 +5,7 @@
         <input name="designation" id="designation" type="text" autocomplete="off" class="form-control" placeholder="NOM" value="{!! $projet->designation ?? '' !!}" required/>
 
     </div>
+    
 </div>
 
 <!-- type de projet -->

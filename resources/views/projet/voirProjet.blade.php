@@ -57,17 +57,12 @@
         <div class="table-wrapper mb-4">
             <table class="pro-table">
                 <thead>
-                    <tr>
-                        <th rowspan="2">Financement</th>
-                        <th rowspan="2">Délai des études</th>
-                        <th colspan="2">ODS démarrage</th>
-                        <th rowspan="2">Date réception</th>
-                        <th rowspan="2">Date de mise en service</th>
-                    </tr>
-                    <tr>
-                        <th>Etudes ODS</th>
-                        <th>Réalisation ODS</th>
-                    </tr>
+                   <th>Type de financement</th>
+<th>Délai des études</th>
+<th> Date réception</th>
+<th> Etudes ODS</th>
+<th> Réalisation ODS</th>
+
                 </thead>
                 <tbody>
                     <tr>
@@ -76,8 +71,7 @@
                         <td>@if($projet->odsEtude){{Carbon\Carbon::parse($projet->odsEtude)->format('d-m-Y')}}@endif</td>
                         <td>@if($projet->odsRealisation){{Carbon\Carbon::parse($projet->odsRealisation)->format('d-m-Y')}}@endif</td>
                         <td>@if($projet->dateReception){{Carbon\Carbon::parse($projet->dateReception)->format('d-m-Y')}}@endif</td>
-                        <td>@if($projet->dateMiseEnOeuvre){{Carbon\Carbon::parse($projet->dateMiseEnOeuvre)->format('d-m-Y')}}@endif</td>
-                    </tr>
+                        
                 </tbody>
             </table>
         </div>
@@ -86,17 +80,15 @@
         <div class="table-wrapper">
             <table class="pro-table">
                 <thead>
-                    <tr>
-                        <th>Montants Alloué</th>
-                        <th>Montants des engagements cumulés</th>
-                        <th>Montant des paiements cumulés</th>
-                        <th>Délai de réalisation</th>
-                        <th>Etat physique</th>
-                        <th>Taux d'avancement</th>
-                        <th>Observations / Contraintes</th>
-                        <th>Date de modification</th>
-                        @can('info') <th>Action</th> @endcan
-                    </tr>
+                   <th> Montants alloué</th>
+<th> Engagements cumulés</th>
+<th>Paiements cumulés</th>
+<th>Délai réalisation</th>
+<th> Etat physique</th>
+<th> Taux d'avancement</th>
+<th> Observations</th>
+<th> Date modification</th>
+
                 </thead>
                 <tbody>
                     @foreach ($projet->avancement->all() as $av)
@@ -257,7 +249,7 @@ function printDiv(divName) {
             <title>Impression Projet</title>
             <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- your main app styles -->
             <style>
-                body { font-family: 'Inter', sans-serif; margin: 20px; color: #111827; }
+                body { font-family: 'Poppins', sans-serif; margin: 20px; color: #111827; }
                 h2 { color: #003c71; margin-bottom: 20px; }
                 .img-logo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
                 .img-logo img { width: 150px; }
@@ -266,8 +258,21 @@ function printDiv(divName) {
                 table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
                 th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; font-size: 13px; }
                 th { background-color: #f1f5f9; font-weight: 600; }
-                .progress { height: 8px; background: #e5e7eb; border-radius: 6px; overflow: hidden; }
-                .progress-bar { height: 100%; background: linear-gradient(90deg,#0068FE,#4D95FE); }
+                .progress {
+    width: 100%;
+    height: 10px;
+    background: #e6eefc;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #e6eefc);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
 
                 .shadow-table { box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
             </style>
@@ -292,8 +297,14 @@ function printDiv(divName) {
 
 
 <style>
+    @font-face {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    src: local('Poppins Regular'), local('Poppins-Regular'), url(../fonts/Poppins-Regular.ttf) format('truetype')
+}
 /* ===== BODY ===== */
-body { font-family:'Inter',sans-serif; background:#f3f4f6; margin:0; }
+body { font-family:'Poppins',sans-serif; background:#f3f4f6; margin:0; }
 .status {
     display: inline-block;
     padding: 4px 10px;
@@ -316,16 +327,61 @@ body { font-family:'Inter',sans-serif; background:#f3f4f6; margin:0; }
 }
 
 /* ===== PAGE CONTAINER ===== */
-.page-container { background:#fff; padding:30px 40px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin:20px auto; max-width:98%; }
+.page-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    border: 2px solid #004EBF; /* main frame */
+    box-shadow: 0 10px 30px rgba(0, 78, 191, 0.08);
+    margin: 20px auto;
+    max-width: 98%;
+}
 
 /* ===== HEADER ===== */
-.page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; border-bottom:1px solid #e5e7eb; padding-bottom:15px; }
-.page-header h1 { margin:0; font-size:24px; color:#111827; }
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #004EBF;
+    font-weight: 700;
+}
+
 .subtitle { color:#6b7280; font-size:14px; margin-top:4px; }
 .header-actions { display:flex; gap:10px; }
 
 /* ===== BUTTONS ===== */
-.btn-action { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; font-size:14px; font-weight:500; border-radius:8px; text-decoration:none; transition:all 0.2s; border:1px solid transparent; cursor:pointer; }
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #0068FE;
+    background: #ffffff;
+    color: #004EBF;
+}
+
+.btn-action:hover {
+    background: #e6eefc;
+    color: #ffffff;
+}
+
+.btn-action:hover i {
+    color: #ffffff;
+}
+
 .btn-photos { color:#004EBF; background:#e7f0ff; border-color:#c7d9f5; }
 .btn-photos:hover { background:#d0e0ff; border-color:#a6c4f0; }
 .btn-ods { color:#F59E0B; background:#fff7e6; border-color:#fcd68a; }
@@ -355,7 +411,7 @@ body { font-family:'Inter',sans-serif; background:#f3f4f6; margin:0; }
 
 .badge-info {
     background-color: #e0f2fe;
-    color: #0369a1;
+    color: #e6eefca1;
 }
 
 .badge-success {
@@ -396,15 +452,62 @@ body { font-family:'Inter',sans-serif; background:#f3f4f6; margin:0; }
 .dropdown:hover .dropdown-menu { display:block; }
 
 /* ===== TABLE ===== */
-.table-wrapper { max-height:500px; overflow-x:auto; border:1px solid #e5e7eb; border-radius:10px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.03); padding:10px; margin-bottom:25px; }
-.pro-table { width:100%; border-collapse:collapse; }
-.pro-table th, .pro-table td { padding:12px 10px; border-bottom:1px solid #e5e7eb; font-size:14px; }
-.pro-table thead th { position:sticky; top:0; background:#f1f5f9; font-weight:600; }
+.table-wrapper {
+    overflow-x: auto;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 0; /* remove spacing */
+}
+
+.pro-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pro-table th {
+    background: #ffffff;
+    color: #111827;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 10px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.pro-table td {
+    padding: 14px 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* soft row hover */
+.pro-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* soft row hover */
+.pro-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* alternate rows */
+.pro-table tbody tr:nth-child(even) {
+    background: #f4f8ff;
+}
+
+/* hover effect */
+.pro-table tbody tr:hover {
+    background: #eaf2ff;
+    transition: 0.2s ease;
+}
 
 /* ===== PROGRESS BAR ===== */
 .progress-wrap { display:flex; align-items:center; gap:8px; }
 .progress { width:100%; height:8px; background:#e5e7eb; border-radius:6px; overflow:hidden; }
-.progress-bar { height:100%; background:linear-gradient(90deg,#0068FE,#4D95FE); }
+.progress-bar { height:100%; background:linear-gradient(90deg,#4D95FE    ,#4D95FE    	  ); }
 .progress-text { font-size:12px; min-width:40px; }
 
 /* ===== MODAL ===== */
@@ -485,6 +588,49 @@ body { font-family:'Inter',sans-serif; background:#f3f4f6; margin:0; }
     to { opacity: 1; transform: translateY(0); }
 }
 
+.btn-action i,
+.btn-inline i,
+.dropdown-item i {
+    color: #0068FE;
+}
+
+.th-icon {
+    font-size: 13px;
+    margin-right: 6px;
+    color: #0068FE; /* your modern blue */
+    opacity: 0.85;
+}
+
+ <style>
+/* Icon style for all table headers */
+.th-icon {
+    font-size: 24px;        /* even bigger icons */
+    font-weight: 300;       /* thin style for modern look */
+    color: #FDC90A;         /* yellow */
+    margin-right: 10px;     /* space between icon and text */
+    vertical-align: middle; /* align with text */
+}
+
+/* Table header style */
+.pro-table th {
+    color: #000;            /* black text */
+    font-weight: 600;       /* bolder headers */
+    font-size: 16px;        /* bigger header text */
+    padding: 12px 10px;
+    text-align: left;
+}
+
+/* Table body style */
+.pro-table td {
+    padding: 8px;
+    font-size: 14px;        /* slightly bigger for readability */
+}
+
+/* Optional: subtle hover effect */
+.pro-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
 </style>
+
 
 @endsection

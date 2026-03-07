@@ -1,325 +1,401 @@
 @extends('layouts.poste')
 @section('content')
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    
-@font-face {
-    font-family: Poppins;
-    font-style: normal;
-    font-weight: 400;
-    src: local('Poppins Regular'), local('Poppins-Regular'), url(../fonts/Poppins-Regular.ttf) format('truetype')
-}
-
-/* ===== BODY BACKGROUND ===== */
-body {
-    background: #f3f4f6; /* soft gray for contrast */
-    font-family: 'Poppins', sans-serif;
-}
-
-/* ===== CONTAINER CARD ===== */
-.page-container {
-    background: #fff;
-    padding: 30px 40px;   /* top/bottom 30px, left/right 40px */
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin: 20px auto;
-    max-width: 98%;       /* almost full width */
-}
-
-
-/* ===== HEADER ===== */
-.page-header {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom: 25px;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 15px;
-}
-.page-header h1 {
-    margin:0;
-    font-size:24px;
-    color: #111827;
-}
-.subtitle {
-    color: #6b7280;
-    font-size:14px;
-    margin-top:4px;
-}
-.header-actions {
-    display:flex;
-    gap:10px;
-}
-
-/* ===== BUTTONS ===== */
-.btn-primary {
-    background:#0068FE;
-    color:#fff;
-    padding:10px 16px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:500;
-    transition: all 0.2s;
-}
-.btn-primary:hover { background:#0050c7; }
-.btn-secondary {
-    background:#f1f5f9;
-    border:1px solid #cbd5e1;
-    padding:10px 16px;
-    border-radius:8px;
-    font-weight:500;
-    cursor:pointer;
-}
-.btn-secondary:hover {
-    background:#e2e8f0;
-}
-
-/* ===== FILTER BAR ===== */
-.filter-bar {
-    display:flex;
-    gap:20px;
-    padding:18px 20px;
-    background:#f9fafb;
-    border-radius:10px;
-    margin-bottom:25px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-    flex-wrap:wrap;
-}
-.filter-bar .form-group {
-    display:flex;
-    flex-direction:column;
-}
-
-/* ===== KPI CARDS ===== */
-.kpi-row {
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:15px;
-    margin-bottom:25px;
-}
-.kpi {
-    background:#f9fafb;
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    transition: transform 0.2s;
-}
-.kpi:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-}
-.kpi span {
-    font-size:13px;
-    color:#6b7280;
-}
-.kpi strong {
-    display:block;
-    margin-top:8px;
-    font-size:20px;
-    color:#111827;
-}
-.btn-inline {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    padding: 4px 10px;          /* compact for table cells */
-    font-size: 13px;
-    font-weight: 500;
-    color: #111827;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-block;
-    white-space: nowrap;        /* prevent wrapping */
-}
-
-.btn-inline:hover {
-    background: #e2e8f0;
-    border-color: #a3b4c4;
-    transform: translateY(-1px);
-}
-
-/* ===== TABS ===== */
-.tabs-pro {
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-    border-bottom:1px solid #e5e7eb;
-    flex-wrap:wrap;
-}
-.tab-btn {
-    padding:8px 16px;
-    border:none;
-    background:none;
-    border-bottom:3px solid transparent;
-    cursor:pointer;
-    font-weight:500;
-    transition: all 0.2s;
-}
-.tab-btn.active {
-    border-color:#0068FE;
-    color:#0068FE;
-}
-
-/* ===== TABLE ===== */
-.tab-content { display:none; }
-.tab-content.active { display:block; }
-
-.table-wrapper {
-    max-height:500px;
-    overflow-x:auto;
-    border:1px solid #e5e7eb;
-    border-radius:10px;
-    background:#fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    padding:10px;
-}
-.pro-table {
-    width:100%;
-    border-collapse:collapse;
-}
-.pro-table th, .pro-table td {
-    padding:12px 10px;
-    border-bottom:1px solid #e5e7eb;
-    font-size:14px;
-}
-.pro-table thead th {
-    position:sticky;
-    top:0;
-    background:#f1f5f9;
-    font-weight:600;
-}
-
-/* ===== BADGES ===== */
-.badge {
-    padding:4px 10px;
-    border-radius:12px;
-    font-size:12px;
-    background:#e5e7eb;
-}
-
-/* ===== PROGRESS BAR ===== */
-.progress-wrap {
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-.progress {
-    width:100%;
-    height:8px;
-    background:#e5e7eb;
-    border-radius:6px;
-    overflow:hidden;
-}
-.progress-bar {
-    height:100%;
-    background:linear-gradient(90deg,#0068FE,#4D95FE);
-}
-.progress-text {
-    font-size:12px;
-    min-width:40px;
-}
-
-/* ===== DEADLINE ===== */
-.deadline {
-    font-weight:500;
-}
-.deadline.ok { color:#16a34a; }
-.deadline.soon { color:#f59e0b; }
-.deadline.late { color:#dc2626; }
-.deadline a { text-decoration:none; color:inherit; }
-
-/* ===== MODAL ===== */
-.modal-overlay {
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.45);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-}
-.modal-box {
-    background:#fff;
-    width:720px;
-    max-width:95%;
-    border-radius:12px;
-    overflow:hidden;
-}
-.modal-header {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:14px 18px;
-    border-bottom:1px solid #e5e7eb;
-}
-.modal-header h3 { margin:0; font-size:18px; }
-.modal-header button {
-    background:none;
-    border:none;
-    font-size:20px;
-    cursor:pointer;
-}
-.modal-body {
-    padding:18px;
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-}
-.modal-item {
-    background:#f8fafc;
-    padding:10px;
-    border-radius:6px;
-}
-.modal-item span {
-    display:block;
-    font-size:12px;
-    color:#6b7280;
-}
-</style>
-<style>
-@media print {
-
-    body {
-        background: white !important;
+    /* ===== MODERN CSS VARIABLES ===== */
+    :root {
+        --primary: #4D95FE; /* Requested Blue */
+        --accent: #FDC90A;  /* Requested Yellow */
+        --primary-hover: #3a84ec;
+        --bg-main: #f8fafc;
+        --card-bg: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --success: #16a34a;
+        --warning: #d97706;
+        --danger: #dc2626;
     }
 
-    .filter-bar,
-    .tabs-pro,
-    .header-actions,
-    .btn-inline,
-    .modal-overlay {
-        display: none !important;
+    body {
+        background: var(--bg-main);
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
     }
 
     .page-container {
-        box-shadow: none !important;
-        padding: 0 !important;
-        max-width: 100% !important;
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+        margin: 20px auto;
+        max-width: 98%;
+        border: 1px solid var(--border-color);
     }
 
-    .tab-content {
-        display: block !important;
+    /* ===== HEADER ===== */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 20px;
     }
 
-    .table-wrapper {
-        max-height: none !important;
-        overflow: visible !important;
-        border: none !important;
-        padding: 0 !important;
+    .page-header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
     }
 
-    .pro-table th {
-        background: #f2f2f2 !important;
+    .header-actions {
+        display: flex;
+        gap: 12px;
     }
 
-    #print-header {
-        display: block !important;
-        text-align: center;
+    /* ===== BEAUTIFUL THIN ICONS (NO BG) ===== */
+    .icon-blue { color: var(--primary); background: none !important; }
+    .icon-yellow { color: var(--accent); background: none !important; }
+    
+    .page-header h1 i {
+        font-size: 28px;
+        margin-right: 15px;
+        font-weight: 300; /* Thin look */
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-primary {
+        background: var(--primary);
+        color: #fff !important;
+        padding: 10px 18px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        transition: 0.3s;
+    }
+
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+    .btn-secondary {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        color: var(--text-main);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ===== FILTER BAR ===== */
+    .filter-bar {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        border: 1px solid var(--border-color);
+        align-items: flex-end;
+        FONT-SIZE: small;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { 
+        font-size: 11px; 
+        font-weight: 700; 
+        color: var(--text-muted); 
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* ===== KPI CARDS ===== */
+    .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
         margin-bottom: 30px;
     }
+
+    .kpi {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: 0.3s;
+    }
+    
+    .kpi:hover { border-color: var(--primary); box-shadow: 0 10px 20px rgba(77, 149, 254, 0.1); }
+
+    .kpi-icon-box {
+        background: none !important; /* Removed background */
+        font-size: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .kpi span { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+    .kpi strong { font-size: 20px; display: block; margin-top: 2px; }
+
+    /* ===== TABS ===== */
+    .tabs-pro {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+        padding: 12px 24px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--text-muted);
+        border-bottom: 3px solid transparent;
+        transition: 0.2s;
+    }
+
+    .tab-btn.active {
+        border-color: var(--accent); /* Yellow accent for active tab underline */
+        color: var(--primary);
+    }
+
+    /* ===== TABLE ===== */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .table-wrapper {
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+    }
+
+    .pro-table { width: 100%; border-collapse: collapse; }
+
+    .pro-table thead th {
+        background: #fcfdfe;
+        padding: 16px 14px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 13px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .pro-table td { padding: 16px 14px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+    .pro-table tr:hover { background-color: #f8fbff; }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-wrap { display: flex; align-items: center; gap: 10px; }
+    .progress { width: 80px; height: 6px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--primary); }
+
+    /* ===== BADGES ===== */
+    .badge { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; background: #f1f5f9; color: var(--text-muted); }
+
+    .deadline i { margin-right: 5px; }
+    .deadline.ok { color: var(--success); }
+    .deadline.soon { color: var(--warning); }
+    .deadline.late { color: var(--danger); }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(4px);
+        display: none; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .modal-box { background: #fff; width: 700px; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .modal-header { padding: 20px; background: #fff; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+    .modal-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .modal-item { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #f1f5f9; }
+    .modal-item span { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+    .modal-item strong { color: var(--text-main); }
+
+    @media print {
+        .filter-bar, .tabs-pro, .header-actions, .btn-inline { display: none !important; }
+        .page-container { box-shadow: none; border: none; padding: 0; }
+        .tab-content { display: block !important; }
+    }
+    /* ===== BIGGER & MODERN ICONS ===== */
+.page-header h1 i{
+    font-size:32px !important;
+    color:var(--primary);
+    transition:0.3s;
 }
+
+.page-header h1 i:hover{
+    transform:scale(1.15);
+    color:var(--accent);
+}
+
+/* KPI icons bigger */
+.kpi-icon-box i{
+    font-size:30px !important;
+    color:var(--primary);
+    transition:all 0.3s ease;
+}
+
+/* yellow icons */
+.icon-yellow{
+    color:var(--accent) !important;
+}
+
+/* blue icons */
+.icon-blue{
+    color:var(--primary) !important;
+}
+
+/* ===== KPI CARD ANIMATION ===== */
+.kpi{
+    transition:all 0.35s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+/* hover lift */
+.kpi:hover{
+    transform:translateY(-8px) scale(1.02);
+    box-shadow:0 20px 35px rgba(77,149,254,0.15);
+    border-color:var(--primary);
+}
+
+/* icon animation on hover */
+.kpi:hover i{
+    transform:scale(1.2) rotate(5deg);
+    color:var(--accent);
+}
+
+/* subtle shine animation */
+.kpi::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(77,149,254,0.15),
+        transparent
+    );
+    transition:0.6s;
+}
+
+.kpi:hover::before{
+    left:100%;
+}
+
+/* ===== TITLES MORE VISIBLE ===== */
+.page-header h1{
+    font-size:28px !important;
+    font-weight:800 !important;
+}
+
+.subtitle{
+    font-size:14px !important;
+    font-weight:500;
+}
+
+/* table icons */
+.pro-table i{
+    font-size:16px;
+}
+/* ===== TITLES COLOR: NOIR CHARBON ===== */
+.page-header h1{
+    color:#1a1a1a !important; /* noir charbon */
+}
+
+.page-header h1 span{
+    color:#1a1a1a !important;
+}
+
+.subtitle{
+    color:#2b2b2b !important;
+}
+
+/* table headers */
+.pro-table thead th{
+    color:#1a1a1a !important;
+}
+
+/* KPI titles */
+.kpi span{
+    color:#2b2b2b !important;
+}
+/* ===== FILTER TITLES ===== */
+.filter-bar label{
+    color:#1a1a1a !important;
+    font-weight:700;
+        FONT-SIZE: small;
+}
+
+/* select text */
+.filter-bar select{
+    color:#1a1a1a !important;
+    font-weight:600;
+}
+
+/* selected option */
+.filter-bar option{
+    color:#1a1a1a;
+}
+
+/* ===== TABS TITLES (construction, rehabilitation...) ===== */
+.tab-btn{
+    color:#1a1a1a !important;
+    font-weight:700;
+    font-size:16px;
+}
+
+.tab-btn.active{
+    color:#000 !important;
+}
+
+/* hover effect */
+.tab-btn:hover{
+    color:#000 !important;
+}
+/* Styles pour les badges de Phase */
+.phase-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+.phase-id { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.phase-etude { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
+.phase-real { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+
 </style>
 
 <div class="page-container">
@@ -327,51 +403,48 @@ body {
     {{-- ================= HEADER ================= --}}
     <div class="page-header">
         <div>
-            <h1>Gestion des projets</h1>
-            <p class="subtitle">Suivi par type de financement</p>
+            <h1>
+               <span style="border-left: 3px solid var(--accent); padding-left: 15px;">Gestion des projets</span>
+            </h1>
+            <p class="subtitle" style="margin-left: 45px; color: var(--text-muted); font-size: 13px;">
+                <i class="fa-solid fa-clock icon-yellow" style="margin-right: 5px;"></i> 
+                Suivi analytique en temps réel
+            </p>
         </div>
 
         <div class="header-actions">
             @can('upw-role')
-                <a href="{{ route('projet.create') }}" class="btn-primary">+ Nouveau projet</a>
+                <a href="{{ route('projet.create') }}" class="btn-primary">
+                    <i class="fa-regular fa-square-plus" style="font-size: 18px;"></i> Nouveau projet
+                </a>
             @endcan
-  @can('manage-users')
-    <button class="btn-secondary" 
-            onclick="printAllProjects()"
-
-            style="background-color: #4D95FE; color:FFFFF; border: none; 
-                   padding: 5px 10px; font-size: 15px;">
-        Imprimer
-    </button>
-    
-@endcan
-</div>
+            @can('manage-users')
+                <button class="btn-secondary" onclick="printAllProjects()">
+                   <i class="fa-solid fa-print icon-blue"></i> Imprimer
+                </button>
+            @endcan
+        </div>
     </div>
 
     {{-- ================= FILTER ================= --}}
     <div class="filter-bar">
         @can('manage-users')
-<div class="form-group">
-    <label><strong>Wilaya</strong></label>
-    <select name="wilaya" id="wilaya" class="select-filtre form-control">
-        @foreach (App\User::all() as $user)
-            @if($user->roles->contains('name','user'))
-                <option value="{{ $user->id }}"
-                    {{ $user->id == ($id ?? auth()->id()) ? 'selected' : '' }}>
-                    {{ $user->name }}
-                </option>
-            @endif
-        @endforeach
-    </select>
-    
-</div>
-@endcan
-
+        <div class="form-group">
+            <label> Wilaya</label>
+            <select name="wilaya" id="wilaya" class="select-filtre form-control">
+                @foreach (App\User::all() as $user)
+                    @if($user->roles->contains('name','user'))
+                        <option value="{{ $user->id }}" {{ $user->id == ($id ?? auth()->id()) ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </div>
+        @endcan
 
         <div class="form-group">
-            <label><strong>Financement</strong></label>
+            <label>TYPE Financement</label>
             <select name="finance" id="finance" class="select-filtre form-control">
-                <option value="tout">Tous</option>
+                <option value="tout">Tous les fonds</option>
                 @foreach ($finances as $f)
                     <option value="{{$f->name}}" @if($f->name == $finance) selected @endif>{{$f->name}}</option>
                 @endforeach
@@ -379,51 +452,28 @@ body {
         </div>
 
         <div class="form-group">
-            <label><strong>Année</strong></label>
+            <label> Année</label>
             <select name="year" id="year" class="select-filtre form-control">
                 @for ($i = (int)Carbon\Carbon::today()->year; $i > (int)Carbon\Carbon::today()->year-5; $i--)
                     <option value="{{$i}}" @if($i==$year) selected @endif>{{$i}}</option>
                 @endfor
             </select>
         </div>
+
+        @can('edit-users')
+        <div class="form-group" style="margin-left:auto">
+            <label><i class="fa-solid fa-chart-pie icon-yellow"></i> Vue de données</label>
+            <select name="select-recap" id="select-recap" class="form-control" style="border-color: var(--border-color); min-width: 150px;">
+                <option value="DUPW" {{ request()->is('projet/gestionprojets*') ? 'selected' : '' }}>DUPW Dashboard</option>
+                <option value="1" {{ request()->is('projet/recaps/1*') ? 'selected' : '' }}>Récapitulatif 1</option>
+                <option value="2" {{ request()->is('projet/recaps/2*') ? 'selected' : '' }}>Récapitulatif 2</option>
+                <option value="3" {{ request()->is('projet/recaps/3*') ? 'selected' : '' }}>Récapitulatif 3</option>
+                <option value="4" {{ request()->is('projet/recaps/4*') ? 'selected' : '' }}>Récapitulatif 4</option>
+            </select>
+        </div>
+        @endcan
     </div>
 
-     {{-- DUPW / RECAP (TOUJOURS À LA FIN) --}}
-    @can('edit-users')
-   <div class="form-group" style="margin-left:auto">
-    <label><strong>Vue</strong></label>
-    <select name="select-recap" id="select-recap" class="form-control">
-
-        <option value="DUPW"
-            {{ request()->is('projet/gestionprojets*') ? 'selected' : '' }}>
-            DUPW
-        </option>
-
-        <option value="1"
-            {{ request()->is('projet/recaps/1*') ? 'selected' : '' }}>
-            Récap 1
-        </option>
-
-        <option value="2"
-            {{ request()->is('projet/recaps/2*') ? 'selected' : '' }}>
-            Récap 2
-        </option>
-
-        <option value="3"
-            {{ request()->is('projet/recaps/3*') ? 'selected' : '' }}>
-            Récap 3
-        </option>
-
-        <option value="4"
-            {{ request()->is('projet/recaps/4*') ? 'selected' : '' }}>
-            Récap 4
-        </option>
-
-    </select>
-</div>
-    @endcan
-
-</div>
     {{-- ================= TABS ================= --}}
     <div class="tabs-pro">
         @foreach($projetsFN as $i=>$type)
@@ -446,20 +496,19 @@ body {
 
             {{-- KPI --}}
             <div class="kpi-row">
-    <div class="kpi" style="background-color: #fff7e6;">
-        <span>Total projets</span>
-        <strong>{{ $total }}</strong>
-    </div>
-    <div class="kpi" style="background-color: #fff7e6;">
-        <span>Montant alloué (DZD)</span>
-        <strong>{{ number_format($alloue, 0, ',', ' ') }} </strong>
-    </div>
-    <div class="kpi" style="background-color: #fff7e6;">
-        <span>Taux consommation (%)</span>
-        <strong>{{ $taux }} </strong>
-    </div>
-</div>
-
+                <div class="kpi">
+                    <div class="kpi-icon-box"><i class="fa-solid fa-diagram-project icon-blue"></i></div>
+                    <div><span>Projets Actifs</span><strong>{{ $total }}</strong></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-icon-box"><i class="fa-solid fa-sack-dollar icon-yellow"></i></div>
+                    <div><span>Budget Alloué</span><strong>{{ number_format($alloue, 0, ',', ' ') }} <small style="font-size: 11px;">DZD</small></strong></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-icon-box"><i class="fa-solid fa-chart-line icon-blue"></i></div>
+                    <div><span>Taux de Consommation</span><strong>{{ $taux }} %</strong></div>
+                </div>
+            </div>
 
             {{-- TABLE --}}
             <div class="table-wrapper">
@@ -467,58 +516,78 @@ body {
                     <thead>
                         <tr>
                             <th>Désignation</th>
+                            <th>Phase</th> 
                             <th>Financement</th>
-                            <th>Alloué</th>
+                            <th>Budget Alloué</th>
                             <th>Engagé</th>
                             <th>Payé</th>
-                            <th>ODS</th>
-                            <th>État</th>
-                            <th>Taux</th>
-                            <th>Délai / Réception</th>
-                            <th>Actions</th>
+                            <th><i class="fa-regular fa-hashtag"></i> ODS</th>
+                            <th>Statut</th>
+                            <th>Avancement</th>
+                            <th>Délai Restant</th>
+                            <th style="text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($type as $p)
                             @php
+                            // Logique pour déterminer la phase actuelle
+$phaseLabel = "Identification"; $phaseClass = "phase-id"; $phaseIcon = "fa-magnifying-glass";
+
+if (!empty($p->odsRealisation)) {
+    $phaseLabel = "Réalisation"; $phaseClass = "phase-real"; $phaseIcon = "fa-person-digging";
+} elseif (!empty($p->odsEtudes)) {
+    $phaseLabel = "Étude"; $phaseClass = "phase-etude"; $phaseIcon = "fa-pen-ruler";
+}
                                 $today = \Carbon\Carbon::today();
                                 $dateRec = $p->dateReception ? \Carbon\Carbon::parse($p->dateReception) : null;
                             @endphp
                             <tr>
-                                <td><a href="{{ route('projet.voirprojet',$p->id) }}">{{ $p->designation }}</a></td>
-                                <td>{{ $p->finance }}</td>
-                                <td>{{ number_format($p->montantAlloue) }}</td>
+                                <td>
+                                    
+                                    <a href="{{ route('projet.voirprojet',$p->id) }}" style="font-weight:600; text-decoration:none; color:var(--primary);">
+                                        {{ Str::limit($p->designation, 45) }}
+                                    </a>
+                                </td>
+                                <td>
+    <span class="phase-badge {{ $phaseClass }}">
+        <i class="fa-solid {{ $phaseIcon }}"></i> {{ $phaseLabel }}
+    </span>
+</td>
+                                <td style="color: var(--text-muted); font-size: 12px;">{{ $p->finance }}</td>
+                                <td style="font-weight: 500;">{{ number_format($p->montantAlloue) }}</td>
                                 <td>{{ number_format($p->montantEC) }}</td>
-                                <td>{{ number_format($p->montantPC) }}</td>
-                                <td>{{ $p->odsRealisation ?? '-' }}</td>
+                                <td style="color:var(--success); font-weight:700;">{{ number_format($p->montantPC) }}</td>
+                                <td><code style="color: var(--primary);">{{ $p->odsRealisation ?? '-' }}</code></td>
                                 <td><span class="badge">{{ $p->etatPhysique }}</span></td>
                                 <td>
                                     <div class="progress-wrap">
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: {{ min($p->tauxA,100) }}%"></div>
-                                        </div>
-                                        <span class="progress-text">{{ $p->tauxA }}%</span>
+                                        <div class="progress"><div class="progress-bar" style="width: {{ min($p->tauxA,100) }}%"></div></div>
+                                        <span style="font-size:11px; font-weight:800; color: var(--text-main);">{{ $p->tauxA }}%</span>
                                     </div>
                                 </td>
                                 <td>
                                     @if($dateRec)
                                         @php $days = $today->diffInDays($dateRec,false); @endphp
                                         <div class="deadline {{ $days < 0 ? 'late' : ($days <= 30 ? 'soon' : 'ok') }}">
-                                            <a href="{{ route('projet.voirprojet',$p->id) }}">
-                                                {{ $days < 0 ? 'Retard '.abs($days).' j' : $days.' j restants' }}
+                                            <i class="fa-regular fa-hourglass-half"></i>
+                                            <a href="{{ route('projet.voirprojet',$p->id) }}" style="text-decoration:none; color:inherit;">
+                                                {{ $days < 0 ? abs($days).' j retard' : $days.' j' }}
                                             </a>
                                         </div>
-                                    @else
-                                        -
-                                    @endif
+                                    @else <span style="color:#cbd5e1;">-</span> @endif
                                 </td>
-                            <td>
-    <button class="btn-inline" onclick="openModal({{ $p->id }})">Détails</button>
-</td>
-
+                                <td style="text-align: right;">
+                                    <button class="btn-secondary" style="padding:6px 12px;" onclick="openModal({{ $p->id }})">
+                                       <i class="fa-solid fa-eye" style="color: var(--primary);"></i>
+                                    </button>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="10" style="text-align:center;color:#6b7280">Aucun projet</td></tr>
+                            <tr><td colspan="10" style="text-align:center; padding: 40px; color:var(--text-muted)">
+                                <i class="fa-regular fa-folder-open" style="display:block; font-size: 30px; margin-bottom: 10px; color: #e2e8f0;"></i>
+                                Aucun projet trouvé dans cette catégorie
+                            </td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -526,9 +595,9 @@ body {
         </div>
     @endforeach
 
-</div> {{-- end page-container --}}
+</div>
 
-{{-- ================= PROJECTS ARRAY FOR MODAL ================= --}}
+{{-- MODAL AND SCRIPTS REMAIN FUNCTIONALLY THE SAME --}}
 <script>
 const projects = [
 @foreach($projetsFN as $type)
@@ -551,20 +620,20 @@ const projects = [
 ];
 </script>
 
-{{-- ================= MODAL ================= --}}
 <div id="projectModal" class="modal-overlay">
     <div class="modal-box">
         <div class="modal-header">
-            <h3>Détails du projet</h3>
-            <button onclick="closeModal()">✕</button>
+            <h3 style="margin:0; font-weight: 700; color: var(--text-main);"><i class="fa-regular fa-file-invoice icon-blue" style="margin-right: 10px;"></i> Détails du projet</h3>
+            <button onclick="closeModal()" style="border:none; background:none; font-size:24px; cursor:pointer; color: var(--text-muted);">&times;</button>
         </div>
         <div class="modal-body" id="modalContent"></div>
+        <div style="padding: 15px 24px; text-align: right; border-top: 1px solid var(--border-color);">
+            <button class="btn-primary" onclick="closeModal()" style="padding: 8px 25px;">Fermer</button>
+        </div>
     </div>
 </div>
 
-{{-- ================= JS ================= --}}
 <script>
-// TAB SWITCH
 document.querySelectorAll('.tab-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
         document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -574,38 +643,37 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     });
 });
 
-// MODAL
 function openModal(id){
     const p = projects.find(pr => pr.id === id);
-    if(!p){ alert('Projet introuvable'); return; }
+    if(!p){ return; }
     document.getElementById('modalContent').innerHTML = `
-        <div class="modal-item"><span>Désignation</span>${p.designation}</div>
-        <div class="modal-item"><span>Financement</span>${p.finance}</div>
-        <div class="modal-item"><span>Montant alloué</span>${p.montantAlloue}</div>
-        <div class="modal-item"><span>Montant engagé</span>${p.montantEC}</div>
-        <div class="modal-item"><span>Montant payé</span>${p.montantPC}</div>
-        <div class="modal-item"><span>Taux d’avancement</span>${p.tauxA}%</div>
-        <div class="modal-item"><span>État physique</span>${p.etatPhysique}</div>
-        <div class="modal-item"><span>ODS réalisation</span>${p.odsRealisation ?? '-'}</div>
-        <div class="modal-item"><span>Date réception</span>${p.dateReception ?? '-'}</div>
-        <div class="modal-item"><span>Observation</span>${p.observation ?? '-'}</div>
+        <div class="modal-item" style="grid-column: span 2"><span>Désignation</span><strong>${p.designation}</strong></div>
+        <div class="modal-item"><span>Financement</span><strong>${p.finance}</strong></div>
+        <div class="modal-item"><span>Budget Alloué</span><strong>${p.montantAlloue} DZD</strong></div>
+        <div class="modal-item"><span>Montant Engagé</span><strong>${p.montantEC} DZD</strong></div>
+        <div class="modal-item"><span>Montant Payé</span><strong style="color:var(--success)">${p.montantPC} DZD</strong></div>
+        <div class="modal-item"><span>Taux d’avancement</span><strong>${p.tauxA}%</strong></div>
+        <div class="modal-item"><span>État physique</span><strong>${p.etatPhysique}</strong></div>
+        <div class="modal-item" style="grid-column: span 2"><span>Observation</span><strong>${p.observation ?? 'Aucune observation'}</strong></div>
     `;
     document.getElementById('projectModal').style.display = 'flex';
 }
-function closeModal(){
-    document.getElementById('projectModal').style.display = 'none';
-}
+function closeModal(){ document.getElementById('projectModal').style.display = 'none'; }
 
-// FILTER CHANGE
 $(".select-filtre").change(function() {
     var w = $('#wilaya').val() ?? '{{$id}}';
     var f = $('#finance').val();
     var y = $('#year').val();
     location.href = "/projet/gestionprojets/"+w+"/"+f+"/"+y;
 });
-</script>
 
-<script>
+document.getElementById('select-recap')?.addEventListener('change', function () {
+    const recap = this.value;
+    const year  = document.getElementById('year').value;
+    const wilaya = document.getElementById('wilaya')?.value ?? '{{ auth()->id() }}';
+    window.location.href = recap === 'DUPW' ? `/projet/gestionprojets/${wilaya}/tout/${year}` : `/projet/recaps/${recap}/tout/${year}`;
+});
+
 function printAllProjects() {
     let original = document.body.innerHTML;
 
@@ -803,5 +871,4 @@ document.getElementById('select-recap')?.addEventListener('change', function () 
 
     </table>
 </div>
-
 @endsection

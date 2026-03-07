@@ -143,7 +143,7 @@
 
 @can('edit-projet')
 
-<a href="{{url()->previous()}}" class="btn back"><i class="fas fa-arrow-circle-left"></i></a>
+<a href="{{url()->previous()}}><i class="fas fa-arrow-circle-left"></i></a>
 
 
   @if(Auth::user()->hasRole('superA'))

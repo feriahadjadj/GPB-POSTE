@@ -1,5 +1,5 @@
 @extends('layouts.poste') @section('content')
-<a href="{{ url()->previous() }}" class="btn back"><i class="fas fa-arrow-circle-left"></i></a>
+<a href="{{ url()->previous() }}><i class="fas fa-arrow-circle-left"></i></a>
 @can('manage-users')
 
 <button  class="btn delete btn-print " onclick="printDiv('Recap2')" id="btnPrintA"><i class="fas fa-print"></i></button>
@@ -22,7 +22,7 @@
 
         <section id="Recap2">
             <div class="img-logo" style ='width:100%;margin-bottom:60px' hidden>
-                <img src='{{asset('img/logo-head.png')}}' alt='img-logo' width='20%'>
+                <img src='{{asset('img/logo copy.png')}}' alt='img-logo' width='20%'>
                 <div class="float-right" style="margin-right: 20px ;margin-top: 10px">
                 <h5>{{Carbon\Carbon::now()}}</h5>
                 </div>

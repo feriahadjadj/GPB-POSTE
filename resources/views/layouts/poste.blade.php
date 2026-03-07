@@ -90,7 +90,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
-    background-color: #212529; /* very dark base */
+    background-color: #495057	    ; /* very dark base */
     transition: left 0.3s ease;
 }
 
@@ -126,7 +126,7 @@ body {
     font-weight: 700;
     background: linear-gradient(90deg, #0068FE 0%, #004EBF 100%); /* same as active */
     color: #FFFFFF;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    text-shadow: 0 1px 3px #004EBF	  ;
 }
 
 /* Logo inside header */
@@ -154,20 +154,20 @@ body {
     font-size: 15px;
     font-weight: 500;
     text-decoration: none;
-    background-color: #2d3436; /* dark grey card */
+    background-color: #004EBF	  ; /* dark grey card */
     transition: all 0.3s ease;
 }
 
 /* Hover effect - subtle */
 .sidebar-nav a:hover {
-    background-color: #343A40; /* slightly lighter grey */
+    background-color: #004EBF; /* slightly lighter grey */
     color: #FFFFFF;
 }
 
 /* Active link - matches header gradient */
 .sidebar-nav a.active {
-    background: linear-gradient(90deg, #0068FE 0%, #004EBF 100%);
-    color: #FFFFFF;
+    background: linear-gradient(90deg, #FDC90A	   0%,#FDC90A	   100%);
+    color:#4D95FE;
 }
 
 /* Icons inside links */
@@ -540,14 +540,14 @@ body {
     flex-direction: column;
     align-items: center;
     border-bottom: 1px solid #2A3A50;
-    background: #1E2A38;
+    background: #495057	  	;
 }
 
 .sidebar-user .user-avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: #004EBF	    	  ;
     color: white;
     font-weight: 600;
     font-size: 18px;
@@ -587,7 +587,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #CED4DA;
+    color: #4D95FE  ;
     text-decoration: none;
     font-size: 14px;
     padding: 8px;
@@ -851,7 +851,6 @@ main.content {
         </button>
 
         <!-- Project Name / Workspace -->
-        <div class="project-name">{{ $projectName ?? 'GPB' }}</div>
     </div>
 
     <div class="topbar-right">

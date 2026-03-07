@@ -61,11 +61,21 @@
                                         <!--     only supeer admin    can edit               -->
 
                                  @can('edit-users')
-  <i class="fas fa-edit edit-icon"
-   data-toggle="modal"
-   data-target="#{{$u->id}}"
-   style="color: #FDC90A; font-size: 20px; cursor: pointer;">
-</i>
+                             <button type="button" 
+                              data-toggle="modal" 
+                              data-target="#{{$u->id}}" 
+                              class="btn" 
+                              style="background: none;
+                              color: #4D95FE; 
+                              border-radius: 10px; 
+                               padding: 12px 16px; /* Increased padding slightly */
+                               border: none; 
+                               display: inline-flex; 
+                                align-items: center; 
+                                justify-content: center;
+                               cursor: pointer;">
+                             <i class="fas fa-pencil-alt" style="font-size: 20px;"></i> 
+                             </button>
 
 
                                         <!--Modifier Modal -->
