@@ -396,6 +396,37 @@
 .phase-etude { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
 .phase-real { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 
+.etat-badge{
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:6px;
+    font-size:11px;
+    font-weight:700;
+    background:#f1f5f9;
+    color:#1e293b;
+    line-height:1.2;
+}
+
+.etat-blue{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.etat-green{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.etat-orange{
+    background:#ffedd5;
+    color:#c2410c;
+}
+
+.etat-gray{
+    background:#f1f5f9;
+    color:#475569;
+}
+
 </style>
 
 <div class="page-container">
@@ -522,7 +553,7 @@
                             <th>Engagé</th>
                             <th>Payé</th>
                             <th><i class="fa-regular fa-hashtag"></i> ODS</th>
-                            <th>Statut</th>
+                            <th>État Physique</th>
                             <th>Avancement</th>
                             <th>Délai Restant</th>
                             <th style="text-align: right;">Action</th>
@@ -531,16 +562,21 @@
                     <tbody>
                         @forelse($type as $p)
                             @php
-                            // Logique pour déterminer la phase actuelle
-$phaseLabel = "Identification"; $phaseClass = "phase-id"; $phaseIcon = "fa-magnifying-glass";
+                            $phaseLabel = "Identification";
+                            $phaseClass = "phase-id";
+                            $phaseIcon = "fa-magnifying-glass";
 
-if (!empty($p->odsRealisation)) {
-    $phaseLabel = "Réalisation"; $phaseClass = "phase-real"; $phaseIcon = "fa-person-digging";
-} elseif (!empty($p->odsEtudes)) {
-    $phaseLabel = "Étude"; $phaseClass = "phase-etude"; $phaseIcon = "fa-pen-ruler";
-}
-                                $today = \Carbon\Carbon::today();
-                                $dateRec = $p->dateReception ? \Carbon\Carbon::parse($p->dateReception) : null;
+                            if ((int) $p->step === 3) {
+                                $phaseLabel = "Réalisation";
+                                $phaseClass = "phase-real";
+                                $phaseIcon = "fa-person-digging";
+                            } elseif ((int) $p->step === 2) {
+                                $phaseLabel = "Étude";
+                                $phaseClass = "phase-etude";
+                                $phaseIcon = "fa-pen-ruler";
+                            }
+                            $today = \Carbon\Carbon::today();
+                            $dateRec = $p->dateReception ? \Carbon\Carbon::parse($p->dateReception) : null;
                             @endphp
                             <tr>
                                 <td>
@@ -550,16 +586,41 @@ if (!empty($p->odsRealisation)) {
                                     </a>
                                 </td>
                                 <td>
-    <span class="phase-badge {{ $phaseClass }}">
-        <i class="fa-solid {{ $phaseIcon }}"></i> {{ $phaseLabel }}
-    </span>
+                    <a href="{{ route('projet.edit', $p->id) }}" style="text-decoration:none;">
+                        <span class="phase-badge {{ $phaseClass }}" style="cursor:pointer;">
+                            <i class="fa-solid {{ $phaseIcon }}"></i> {{ $phaseLabel }}
+                        </span>
+                    </a>
 </td>
                                 <td style="color: var(--text-muted); font-size: 12px;">{{ $p->finance }}</td>
                                 <td style="font-weight: 500;">{{ number_format($p->montantAlloue) }}</td>
                                 <td>{{ number_format($p->montantEC) }}</td>
                                 <td style="color:var(--success); font-weight:700;">{{ number_format($p->montantPC) }}</td>
                                 <td><code style="color: var(--primary);">{{ $p->odsRealisation ?? '-' }}</code></td>
-                                <td><span class="badge">{{ $p->etatPhysique }}</span></td>
+                                <td>
+                                    @php
+                                        $etat = $p->etatPhysiqueDisplay ?? $p->etatPhysique ?? '';
+
+                                        if ($etat === 'R') {
+                                            $label = 'En Cours';
+                                            $class = 'etat-blue';
+                                        } elseif ($etat === 'NL') {
+                                            $label = 'Non Lancé';
+                                            $class = 'etat-gray';
+                                        } elseif ($etat === 'A') {
+                                            $label = 'Achevé';
+                                            $class = 'etat-green';
+                                        } elseif ($etat === 'EA' || $etat === 'En Attente') {
+                                            $label = 'En Attente';
+                                            $class = 'etat-orange';
+                                        } else {
+                                            $label = $etat ?: '-';
+                                            $class = 'etat-gray';
+                                        }
+                                    @endphp
+
+                                    <span class="etat-badge {{ $class }}">{{ $label }}</span>
+                                </td>
                                 <td>
                                     <div class="progress-wrap">
                                         <div class="progress"><div class="progress-bar" style="width: {{ min($p->tauxA,100) }}%"></div></div>

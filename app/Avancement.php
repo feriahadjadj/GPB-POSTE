@@ -27,6 +27,15 @@ class Avancement extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
+    public function fromDateTime($value)
+    {
+        if ($value instanceof DateTimeInterface) {
+            return $value->format('Y-m-d\TH:i:s');
+        }
+
+        return $value;
+    }
+
     function projet()
     {
         return $this->belongsTo('App\Projet');

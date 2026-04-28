@@ -139,6 +139,220 @@ class projetController extends Controller
         ]));
     }
 
+    public function saveStep(Request $request)
+    {
+        try {
+            $id = Auth::id();
+
+            $projectId = $request->input('project_id');
+            $step = (int) $request->input('step');
+
+            $data = $request->except(['_token', 'project_id', 'step']);
+            $data['step'] = $step;
+
+            // Defaults for step 3 / shared values
+            $data['montantAlloue'] = $request->input('montantAlloue', 0);
+            $data['montantEC'] = $request->input('montantEC', 0);
+            $data['montantPC'] = $request->input('montantPC', 0);
+            $data['etatPhysique'] = $request->input('etatPhysique', 'R');
+            $data['tauxA'] = $request->input('tauxA', 0);
+            $data['observation'] = $request->input('observation', null);
+
+            if ($request->filled('delaiR_value')) {
+                $data['delaiR'] = $request->input('delaiR_value') . ' ' . $request->input('delaiR_type', 'j');
+            } else {
+                $data['delaiR'] = '0 j';
+            }
+
+            if ($request->filled('delaiE_value')) {
+                $data['delaiE'] = $request->input('delaiE_value') . ' ' . $request->input('delaiE_type', 'j');
+            }
+
+            // Normalize date fields
+            $dateFields = [
+                'date_creation',
+                'odsEtude',
+                'date_lancement',
+                'date_ouverture_plis',
+                'date_attribution',
+                'date_validation_commission',
+                'odsRealisation',
+                'dateReception',
+            ];
+
+            foreach ($dateFields as $field) {
+                if (array_key_exists($field, $data)) {
+                    $data[$field] = $this->normalizeSqlServerDate($data[$field] ?? null);
+                }
+            }
+
+            // STEP 1: identification
+            if ($step === 1) {
+                Validator::make($request->all(), [
+                    'designation' => 'required|string|max:255',
+                    'nature' => 'required|string|max:255',
+                    'finance' => 'nullable|string|max:255',
+                    'montantAlloue' => 'required|numeric',
+                    'date_creation' => 'nullable|date',
+                ])->validate();
+
+                $data['user_id'] = $id;
+
+                if (empty($projectId)) {
+                    $projet = Projet::create($data);
+
+                    Avancement::create([
+                        'projet_id' => $projet->id,
+                        'montantAlloue' => $data['montantAlloue'],
+                        'montantEC' => $data['montantEC'],
+                        'montantPC' => $data['montantPC'],
+                        'delaiR' => $data['delaiR'],
+                        'etatPhysique' => $data['etatPhysique'],
+                        'tauxA' => $data['tauxA'],
+                        'observation' => $data['observation'],
+                    ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Projet créé avec succès.',
+                        'project_id' => $projet->id,
+                    ]);
+                }
+
+                $projet = Projet::findOrFail($projectId);
+
+                $projet->update($data);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Identification mise à jour avec succès.',
+                    'project_id' => $projet->id,
+                ]);
+            }
+
+            if (empty($projectId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Veuillez enregistrer l’identification d’abord.'
+                ], 422);
+            }
+
+            $projet = Projet::findOrFail($projectId);
+
+            // STEP 2: etude / procédure
+            if ($step === 2) {
+                Validator::make($request->all(), [
+                    'delaiE_value' => 'nullable|numeric',
+                    'delaiE_type' => 'nullable|string|in:j,m',
+                    'odsEtude' => 'nullable|date',
+                    'date_lancement' => 'nullable|date',
+                    'date_ouverture_plis' => 'nullable|date',
+                    'date_attribution' => 'nullable|date',
+                    'date_validation_commission' => 'nullable|date',
+                ])->validate();
+
+                $step2Data = [
+                    'step' => 2,
+                    'delaiE' => $data['delaiE'] ?? $projet->delaiE,
+                    'odsEtude' => $data['odsEtude'] ?? $projet->odsEtude,
+                    'date_lancement' => $data['date_lancement'] ?? $projet->date_lancement,
+                    'date_ouverture_plis' => $data['date_ouverture_plis'] ?? $projet->date_ouverture_plis,
+                    'date_attribution' => $data['date_attribution'] ?? $projet->date_attribution,
+                    'date_validation_commission' => $data['date_validation_commission'] ?? $projet->date_validation_commission,
+                    'observation_etude' => $data['observation_etude'] ?? $projet->observation_etude,
+                ];
+
+                $projet->update($step2Data);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Étape 2 mise à jour avec succès.',
+                    'project_id' => $projet->id,
+                ]);
+            }
+
+            // STEP 3: realisation / avancement
+            if ($step === 3 && !empty($data['odsRealisation']) && !empty($data['delaiR'])) {
+                $dateR = Carbon::parse($data['odsRealisation']);
+
+                if (substr(trim($data['delaiR']), -1) === 'j') {
+                    $days = (int) str_replace(' j', '', $data['delaiR']);
+                    $data['dateReception'] = $dateR->addDays($days)->format('Y-m-d');
+                } else {
+                    $months = (int) str_replace(' m', '', $data['delaiR']);
+                    $data['dateReception'] = $dateR->addMonths($months)->format('Y-m-d');
+                }
+            }
+            $projet->update($data);
+
+            if ($step === 3) {
+                $latestAvancement = Avancement::where('projet_id', $projet->id)->latest()->first();
+
+                $delaiRValue = $data['delaiR'] ?? ($projet->delaiR ?: '0 j');
+
+                $avancementData = [
+                    'projet_id' => $projet->id,
+                    'montantAlloue' => $request->input('montantAlloue', $projet->montantAlloue ?? 0),
+                    'montantEC' => $request->input('montantEC', $projet->montantEC ?? 0),
+                    'montantPC' => $request->input('montantPC', $projet->montantPC ?? 0),
+                    'delaiR' => $delaiRValue,
+                    'etatPhysique' => $request->input('etatPhysique', $projet->etatPhysique ?? 'R'),
+                    'tauxA' => $request->input('tauxA', $projet->tauxA ?? 0),
+                    'observation' => $request->input('observation', $projet->observation),
+                ];
+
+                if (
+                    !$latestAvancement ||
+                    $latestAvancement->etatPhysique != $avancementData['etatPhysique'] ||
+                    $latestAvancement->tauxA != $avancementData['tauxA'] ||
+                    $latestAvancement->observation != $avancementData['observation'] ||
+                    $latestAvancement->delaiR != $avancementData['delaiR'] ||
+                    $latestAvancement->montantAlloue != $avancementData['montantAlloue'] ||
+                    $latestAvancement->montantEC != $avancementData['montantEC'] ||
+                    $latestAvancement->montantPC != $avancementData['montantPC']
+                ) {
+                    Avancement::create($avancementData);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Projet mis à jour avec succès.',
+                'project_id' => $projet->id,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('saveStep failed', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getDisplayEtatPhysique(Projet $p)
+    {
+        if ((int) $p->step !== 3) {
+            return 'NL';
+        }
+
+        $hasActiveRetard = $p->retards()
+            ->whereIn('type', ['realisation', 'réalisation'])
+            ->whereDate('date_arret', '<=', Carbon::today())
+            ->whereDate('date_reprise', '>=', Carbon::today())
+            ->exists();
+
+        if ($hasActiveRetard) {
+            return 'En Attente';
+        }
+
+        return $p->etatPhysique;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -159,8 +373,15 @@ class projetController extends Controller
      */
     public function edit($id)
     {
-        //
+        $projet = Projet::findOrFail($id);
+        $natures = Nature::all();
+        $finances = Finance::orderBy('name', 'DESC')->get();
 
+        return view('projet/ajouterProjet')->with([
+            'projet' => $projet,
+            'natures' => $natures,
+            'finances' => $finances
+        ]);
     }
 
     /**
@@ -210,7 +431,7 @@ class projetController extends Controller
             } else {
                 $r = ' m';
                 $dateR->addMonths((int) $data['delaiR'])->format('Y-m-d');
-                $data['dateReception'] = $dateR->addDays((int) $this->delayDays($projet))->format('Y-m-d');
+                $data['dateReception'] = $dateR->addDays(0)->format('Y-m-d');
             }
         } else {
             if ($data['realisation'] == 'jourR') {
@@ -356,6 +577,10 @@ class projetController extends Controller
             foreach ($natures as $i => $n) {
                 # code...
                 $projets =  Projet::getProjetsByFinanceNature($id, $year, $finance, $n->name);
+
+                foreach ($projets as $projet) {
+                    $projet->etatPhysiqueDisplay = $this->getDisplayEtatPhysique($projet);
+                }
 
                 //   foreach ($projets as $j => $p1) {
                 //       if($p1->etatPhysique == 'NL' && Carbon::parse($p1->created_at)->year != $year ){
@@ -547,7 +772,7 @@ class projetController extends Controller
     {
         $days = 0;
         $retards = $p->retards()
-            ->where('type', 'realisation')
+            ->whereIn('type', ['realisation', 'réalisation'])
             ->get();
         foreach ($retards as $key => $r) {
 
@@ -561,17 +786,24 @@ class projetController extends Controller
 
     public function receptionDate(Projet $p)
     {
+        if (empty($p->odsRealisation) || empty($p->delaiR)) {
+            return $p;
+        }
+
         $dateR = Carbon::parse($p->odsRealisation);
 
-        if (substr($p->delaiR, -1) == 'j') {
-            $p->dateReception = $dateR->addDays((int) str_replace(' j', '', $p->delaiR) + (int) $this->delayDays($p))->format('Y-m-d');
-        } else {
-            $dateR->addMonths((int) str_replace(' m', '', $p->delaiR))
+        if (substr(trim($p->delaiR), -1) == 'j') {
+            $p->dateReception = $dateR
+                ->addDays((int) str_replace(' j', '', $p->delaiR))
                 ->format('Y-m-d');
-            $p->dateReception = $dateR->addDays((int) $this->delayDays($p))->format('Y-m-d');
+        } else {
+            $p->dateReception = $dateR
+                ->addMonths((int) str_replace(' m', '', $p->delaiR))
+                ->format('Y-m-d');
         }
 
         $p->save();
+
         return $p;
     }
 

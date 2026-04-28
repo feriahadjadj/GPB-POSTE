@@ -15,6 +15,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/projet/create', 'projetController@create')->name('projet.create');
+Route::post('/projet/save-step', 'projetController@saveStep')->name('projet.saveStep');
+Route::get('/projet/edit/{id}', 'projetController@edit')->name('projet.edit');
 Route::get('/projet/voirprojet/{id}', 'projetController@voirProjet')->name('projet.voirprojet');
 //
 Route::post('/projet/store', 'projetController@store')->name('projet.store');

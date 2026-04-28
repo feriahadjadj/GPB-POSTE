@@ -16,23 +16,34 @@ class CreateProjetsTable extends Migration
         Schema::create('projets', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
+
             $table->string('designation');
             $table->string('nature');
             $table->char('finance', 5);
-            $table->string('delaiE');
-            $table->date('odsEtude');
-            $table->date('odsRealisation');
+
+            $table->decimal('montantAlloue', 15, 2)->default(0);
+            $table->decimal('montantEC', 15, 2)->default(0);
+            $table->decimal('montantPC', 15, 2)->default(0);
+
+            $table->date('date_creation')->nullable();
+
+            $table->string('delaiE')->default('0 j');
+            $table->date('odsEtude')->nullable();
+            $table->date('date_lancement')->nullable();
+            $table->date('date_ouverture_plis')->nullable();
+            $table->date('date_attribution')->nullable();
+            $table->date('date_validation_commission')->nullable();
+            $table->longText('observation_etude')->nullable();
+
+            $table->string('delaiR')->default('0 j');
+            $table->date('odsRealisation')->nullable();
             $table->date('dateReception')->nullable();
             $table->date('dateMiseEnOeuvre')->nullable();
-            $table->decimal('montantAlloue',15,2);
-            $table->decimal('montantEC',15,2);
 
-            $table->string('delaiR');
-            $table->string('etatPhysique');
-            $table->integer('tauxA');
+            $table->string('etatPhysique')->default('R');
+            $table->integer('tauxA')->default(0);
             $table->longText('observation')->nullable();
-            $table->decimal('montantPC',15,2);
-            //$table->longText('observation');
+
             $table->timestamps();
         });
     }

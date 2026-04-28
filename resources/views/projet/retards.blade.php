@@ -24,7 +24,7 @@
 
             <div class="form-group col-2 text-center">
                 <label for="realisation">Réalisation</label>
-                <input class="form-check-input" type="radio" name="type" id="realisation" value="réalisation">
+                <input class="form-check-input" type="radio" name="type" id="realisation" value="realisation">
             </div>
 
             <div class="form-group col-3">
@@ -42,11 +42,10 @@
                 <input type="date" id="end-date" name="date_reprise" class="form-control" required>
             </div>
 
-           <div class="form-group col-4">
-    <label for="attachment">Pièce jointe</label>
-    <input type="file" name="attachment" id="attachment" class="form-control-file" required>
-</div>
-
+            <!-- <div class="form-group col-4">
+                <label for="attachment">Pièce jointe</label>
+                <input type="file" name="attachment" id="attachment" class="form-control-file" required>
+            </div> -->
 
             <div class="form-group col-2">
                 <button type="submit" class="btn btn-primary form-control">Ajouter</button>
@@ -73,7 +72,7 @@
                         <th>Date d'arret</th>
                         <th>Date de reprise</th>
                         <th>Motif</th>
-                        <th>Pièce jointe</th>
+                        <!-- <th>Pièce jointe</th> -->
                         @can('upw-role') <th>Action</th> @endcan
                     </thead>
                     <tbody id="table-e">
@@ -83,7 +82,7 @@
                                 <td>{{ \Carbon\Carbon::parse($r->date_arret)->format('d-m-Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($r->date_reprise)->format('d-m-Y') }}</td>
                                 <td>{{ $r->reason }}</td>
-                                <td>
+                                <!-- <td>
                                     @if($r->attachment)
                                         <a href="{{ asset('storage/'.$r->attachment) }}" target="_blank" class="btn btn-sm btn-outline-info">
                                             Voir PJ
@@ -91,7 +90,7 @@
                                     @else
                                         -
                                     @endif
-                                </td>
+                                </td> -->
                                 @can('upw-role')
                                 <td style="display: flex;">
                                     <a href="{{route('projet.destroyRetard',$r->id)}}">
@@ -125,17 +124,17 @@
                         <th>Date d'arret</th>
                         <th>Date de reprise</th>
                         <th>Motif</th>
-                        <th>Pièce jointe</th>
+                        <!-- <th>Pièce jointe</th> -->
                         @can('upw-role') <th>Action</th> @endcan
                     </thead>
                     <tbody id="table-r">
                         @foreach ($retards as $r)
-                            @if($r->type=="réalisation")
+                            @if(in_array($r->type, ['realisation', 'réalisation']))
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($r->date_arret)->format('d-m-Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($r->date_reprise)->format('d-m-Y') }}</td>
                                 <td>{{ $r->reason }}</td>
-                                <td>
+                                <!-- <td>
                                     @if($r->attachment)
                                         <a href="{{ asset('storage/'.$r->attachment) }}" target="_blank" class="btn btn-sm btn-outline-info">
                                             Voir PJ
@@ -143,7 +142,7 @@
                                     @else
                                         -
                                     @endif
-                                </td>
+                                </td> -->
                                 @can('upw-role')
                                 <td style="display: flex;">
                                     <a href="{{route('projet.destroyRetard',$r->id)}}">
@@ -194,10 +193,12 @@
                         <input type="date" id="end-date-modal" name="date_reprise" class="form-control" required>
                     </div>
 
+                    <!--
                     <div class="form-group">
                         <label for="attachment-modal">Pièce jointe</label>
                         <input type="file" name="attachment" id="attachment-modal" class="form-control-file">
                     </div>
+                    -->
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary form-control">Valider</button>

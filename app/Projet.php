@@ -8,10 +8,39 @@ use DateTimeInterface;
 
 class Projet extends Model
 {
-    protected $fillable = ['user_id', 'designation', 'nature', 'finance', 'delaiE', 'odsEtude', 'odsRealisation', 'dateReception', 'dateMiseEnOeuvre', 'montantAlloue', 'montantEC', 'montantPC', 'delaiR', 'etatPhysique', 'tauxA', 'observation'];
+    protected $fillable = [
+        'user_id',
+        'step',
+        'designation',
+        'nature',
+        'finance',
+        'montantAlloue',
+        'date_creation',
+        'odsEtude',
+        'delaiE',
+        'date_lancement',
+        'date_ouverture_plis',
+        'date_attribution',
+        'date_validation_commission',
+        'observation_etude',
+        'odsRealisation',
+        'etatPhysique',
+        'tauxA',
+        'observation',
+        'dateReception',
+        'dateMiseEnOeuvre',
+        'montantEC',
+        'montantPC',
+        'delaiR'
+    ];
 
     protected $casts = [
+        'date_creation' => 'date:Y-m-d',
         'odsEtude' => 'date:Y-m-d',
+        'date_lancement' => 'date:Y-m-d',
+        'date_ouverture_plis' => 'date:Y-m-d',
+        'date_attribution' => 'date:Y-m-d',
+        'date_validation_commission' => 'date:Y-m-d',
         'odsRealisation' => 'date:Y-m-d',
         'dateReception' => 'date:Y-m-d',
     ];

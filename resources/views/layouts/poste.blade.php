@@ -80,17 +80,18 @@ body {
 /* ================== SIDEBAR ================== */
 /* Sidebar Base */
 .sidebar {
-  width: 280px;
-    height: 100vh; /* full viewport height */
-    position: fixed; /* makes it fixed on screen */
+    width: 280px;
+    height: 100vh;
+    position: fixed;
     top: 0;
-    left: 0; /* adjust if sidebar opens from left */
-    z-index: 140; /* make sure it's above content */
-
+    left: 0;
+    z-index: 140;
     display: flex;
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
-    background-color: #495057	    ; /* very dark base */
+    /* Changement ici : Fond clair et bordure droite */
+    background-color: #F8FAFC; 
+    border-right: 1px solid #E2E8F0;
     transition: left 0.3s ease;
 }
 
@@ -150,11 +151,12 @@ body {
     align-items: center;
     gap: 16px;
     padding: 14px 24px;
-    color: #CED4DA; /* grey text */
+    /* Changement ici : Texte gris/bleu pro */
+    color:#212529	  ; 
     font-size: 15px;
     font-weight: 500;
     text-decoration: none;
-    background-color: #004EBF	  ; /* dark grey card */
+    background-color: transparent; 
     transition: all 0.3s ease;
 }
 
@@ -166,14 +168,17 @@ body {
 
 /* Active link - matches header gradient */
 .sidebar-nav a.active {
-    background: linear-gradient(90deg, #FDC90A	   0%,#FDC90A	   100%);
-    color:#4D95FE;
+    /* Changement ici : Fond bleu très clair et barre bleue à droite */
+    background: #E6F0FF; 
+    color: #0068FE;
+    border-right: 4px solid #0068FE;
 }
 
 /* Icons inside links */
 .sidebar-nav a i {
     width: 22px;
     font-size: 18px;
+    color: inherit;
 }
 
 /* Text inside links */
@@ -535,12 +540,13 @@ body {
 }
 /* Sidebar User Info */
 .sidebar-user {
-    padding: 24px;
+padding: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-bottom: 1px solid #2A3A50;
-    background: #495057	  	;
+    /* Changement ici : Bordure et fond assortis */
+    border-bottom: 1px solid #E2E8F0;
+    background: #F8FAFC;	;
 }
 
 .sidebar-user .user-avatar {
@@ -564,7 +570,7 @@ body {
 .sidebar-user .user-info strong {
     display: block;
     font-size: 16px;
-    color: white;
+    color: #1E293B; /* Nom de l'utilisateur en foncé */
 }
 
 .sidebar-user .user-info span {
@@ -582,12 +588,11 @@ body {
     gap: 10px;
 }
 
-
 .sidebar-footer a {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #4D95FE  ;
+    color: #64748B; 
     text-decoration: none;
     font-size: 14px;
     padding: 8px;
@@ -596,8 +601,8 @@ body {
 }
 
 .sidebar-footer a:hover {
-    background: rgba(255,255,255,.08);
-    color: white;
+    background: #E2E8F0;
+    color: #1E293B;
 }
 
 /* Topbar Logo */
@@ -827,12 +832,13 @@ main.content {
         <!-- Profile & Logout (Fixed at bottom) -->
          <div class="sidebar-footer">
         <a href="{{ route('admin.users.show', Auth::user()->id) }}">
-            <i class="fa fa-user"></i> Mon profil
+            <i class="fa fa-user "style="color:#4D95FE    ;"></i> Mon profil
         </a>
-        <a href="{{ route('logout') }}"
-           onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-            <i class="fa fa-sign-out-alt"></i> Déconnexion
-        </a>
+       <a href="{{ route('logout') }}" 
+   style="color: #dc3545 !important; font-weight: 600;"
+   onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+    <i class="fa fa-sign-out-alt" style="color: #dc3545;"></i> Déconnexion
+</a>
         <form id="logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">
             @csrf
         </form>

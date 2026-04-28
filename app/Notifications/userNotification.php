@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use DateTimeInterface;
 
 class userNotification extends Notification
 {
@@ -76,5 +77,19 @@ class userNotification extends Notification
 
             //
         ];
+    }  
+    
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
+    public function fromDateTime($value)
+    {
+        if ($value instanceof DateTimeInterface) {
+            return $value->format('Y-m-d\TH:i:s');
+        }
+
+        return $value;
     }
 }
